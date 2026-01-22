@@ -1,0 +1,128 @@
+<?php
+
+namespace Cfpt\Montres\Models;
+
+use Cfpt\Montres\Infrastructure\Database;
+
+abstract class Model {
+    public ?int $id = null;
+    protected array $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    public function __construct(
+        protected Database $db
+    ) {}
+
+    protected function table(): string {
+        return strtolower((new \ReflectionClass($this))->getShortName()) . 's';
+    }
+
+    protected function fill(array $data) {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                if (isset($this->casts[$key])) {
+                    switch ($this->casts[$key]) {
+                        case 'datetime':
+                            $value = new \DateTime($value);
+                            break;
+                    }
+                }
+                $this->$key = $value;
+            }
+        }
+        return $this;
+    }
+
+    public function all(): array {
+        $stmt = $this->db->query("SELECT * FROM " . $this->table());
+        $data = $stmt->fetchAll();
+        $data = array_map(fn($d) => $this->fill($d), $data);
+
+        return $data;
+    }
+
+    public function save() {
+        if($this->id) {
+            return $this->update();
+        } else {
+            return $this->insert();
+        }
+    }
+
+    protected function update() {
+        if(!$this->id) {
+            throw new \Exception("Cannot update a record without an ID.");
+        }
+
+        $table = $this->table();
+        $props = get_object_vars($this);
+
+        unset($props['id'], $props['db'], $props['casts']);
+
+        if (empty($props)) {
+            throw new \Exception("No properties to update.");
+        }
+
+        $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($props)));
+    
+        $sql = "UPDATE {$table} SET $set WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute(array_merge($props, ['id' => $this->id]));
+    }
+
+    protected function insert() {
+        $table = $this->table();
+        $props = get_object_vars($this);
+
+        unset($props['id'], $props['db'], $props['casts']);
+
+        if (empty($props)) {
+            throw new \Exception("No properties to insert.");
+        }
+
+        $columns = implode(', ', array_keys($props));
+        $placeholders = implode(', ', array_map(fn($k) => ":$k", array_keys($props)));
+
+        $sql = "INSERT INTO {$table} ({$columns}) VALUES ({$placeholders})";
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute($props);
+
+        $this->id = (int)$this->db->lastInsertId();
+
+        return $result;
+    }
+
+    public function delete() {
+        if(!$this->id) {
+            throw new \Exception("Cannot delete a record without an ID.");
+        }
+
+        $table = $this->table();
+
+        $sql = "DELETE FROM {$table} WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute(['id' => $this->id]);
+
+        $this->id = null;
+
+        return $result;
+    }
+
+    public function find(int $id): ?self {
+        $table = $this->table();
+
+        $sql = "SELECT * FROM {$table} WHERE id = :id LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id' => $id]);
+
+        $data = $stmt->fetch();
+        $data = $this->fill($data);
+
+        return $data ?: null;
+    }
+}

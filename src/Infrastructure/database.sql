@@ -1,6 +1,6 @@
-CREATE DATABASE cfpt_rolex;
+CREATE DATABASE cfpt_montres;
 
-USE cfpt_rolex;
+USE cfpt_montres;
 
 CREATE TABLE roles (
     id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
