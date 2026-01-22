@@ -1,0 +1,11 @@
+{
+    "name": "cfpt/montres",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Cfpt\\Montres\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {}
+}
