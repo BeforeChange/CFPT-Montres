@@ -31,20 +31,6 @@ $errorMiddleware->setErrorHandler(
     }
 );
 
-$errorMiddleware->setDefaultErrorHandler(
-    function ($request, Throwable $exception, bool $displayErrorDetails) {
-        $response = new Response();
-
-        $status = 500;
-        if ($exception instanceof HttpNotFoundException) {
-            $status = 404;
-        }
-
-        $controller = new \Cfpt\Montres\Controllers\ErrorController();
-        return $controller->show($request, $response, ['code' => $status]);
-    }
-);
-
 (require __DIR__ . '/../routes/HomeRoutes.php')($app);  
 (require __DIR__ . '/../routes/AuthRoutes.php')($app);
 
