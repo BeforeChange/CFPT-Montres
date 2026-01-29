@@ -57,7 +57,13 @@ class AuthController extends Controller {
     }
 
     public function logout(Request $request, Response $response, array $args) {
-        // Handle logout logic here
+        $result = $this->userService->logout();
+
+        if(!$result) {
+            throw new HttpInternalServerErrorException($request, "Une erreur interne est survenu lors de la déconnexion.");
+        }
+
+        return $response->withHeader('Location', '/login')->withStatus(302);
     }
 
     public function showRegister(Request $request, Response $response, array $args) {
@@ -101,5 +107,12 @@ class AuthController extends Controller {
         return $response
             ->withHeader('Location', '/login')
             ->withStatus(302);
+    }
+
+    public function profil(Request $request, Response $response, array $args) {
+        $user = $this->userService->getCurrentUser();
+        return $this->renderer->render($response, 'auth/profil.php', [
+            'user' => $user
+        ]);
     }
 }

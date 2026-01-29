@@ -17,6 +17,7 @@ class UserService extends Service {
     }
 
     public function login(string $email, string $password): bool {
+
         $user = new User($this->db);
         $user->findByEmail($email);
 
@@ -30,7 +31,20 @@ class UserService extends Service {
         return true;
     }
 
-    public function logout(): void {
-        // Log out the user
+    public function logout(): bool {
+        unset($_SESSION['user_id']);
+        return true;
+    }
+
+    public function getCurrentUser() {
+        $user = new User($this->db);
+        $user->findById($_SESSION['user_id']);
+
+        if($user == null)
+            return false;
+
+        unset($user->password_hash);
+
+        return $user;
     }
 }

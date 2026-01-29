@@ -28,6 +28,21 @@ class User extends Model {
         return $data ?: null;
     }
 
+    public function findById(int $id) {
+        $table = $this->table();
+
+        $sql = "SELECT * FROM {$table} WHERE id = :id LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id' => $id]);
+
+        $data = $stmt->fetch();
+        $data = $this->fill($data);
+
+        return $data ?: null;
+    }
+
+
     public function checkPassword(string $password) {
         return password_verify($password, $this->password_hash);
     }

@@ -10,4 +10,6 @@ return function ($app) {
 
     $app->get('/register', [AuthController::class, 'showRegister']);
     $app->post('/register', [AuthController::class, 'register']);
+
+    $app->get('/profil', [AuthController::class, 'profil']);
 };
