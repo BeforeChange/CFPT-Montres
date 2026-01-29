@@ -1,0 +1,82 @@
+.card-group .card {
+    height: 100%;
+}
+
+.card-group .card img {
+    height: 180px;          /* même hauteur pour toutes */
+    object-fit: contain;   /* garde les proportions du logo */
+    padding: 15px;
+    background: #f8f9fa;   /* optionnel, joli fond clair */
+}
+
+.card-group .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.watch-card {
+    border: 2px solid #000;
+    padding: 15px;
+    text-align: center;
+    height: 100%;
+}
+
+.watch-img {
+    border: 2px solid #000;
+    padding: 10px;
+    margin-bottom: 10px;
+    height: 150px;
+}
+
+.watch-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.watch-card h5 {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+.desc {
+    font-size: 14px;
+    color: #444;
+}
+
+.btn-details {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 6px 15px;
+    background: #666;
+    color: white;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+.btn-details:hover {
+    background: #000;
+}
+
+.price {
+    font-weight: bold;
+}
+
+/* FILTRES */
+
+.filter-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+    padding-top: 20px;
+}
+
+.filter-btn {
+    padding: 6px 20px;
+    border: 2px solid black;
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+}
