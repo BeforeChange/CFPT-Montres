@@ -115,4 +115,50 @@ class AuthController extends Controller {
             'user' => $user
         ]);
     }
+
+    public function showEdit(Request $request, Response $response, array $args) {
+        $user = $this->userService->getCurrentUser();
+        return $this->renderer->render($response, 'auth/profil/edit.php', [
+            'user' => $user
+        ]);
+    }
+
+    public function update(Request $request, Response $response, array $args) {
+        $user = $this->userService->getCurrentUser();
+        
+        $data = $request->getParsedBody();
+
+        $firstName = filter_var($data['first_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $lastName = filter_var($data['last_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL, FILTER_NULL_ON_FAILURE);
+
+
+        $errors = [];
+
+        if (!$email) {
+            $errors['email'] = 'Invalid email address.';
+        }
+
+        if ($errors) {
+            return $this->renderer->render($response, 'auth/profil/edit.php', [
+                'errors' => $errors,
+                'data' => $data
+            ]);
+        }
+
+        $user->email = $email;
+        $user->first_name = $firstName;
+        $user->last_name = $lastName;
+
+        $result = $user->save();
+
+
+        if (!$result) {
+            throw new HttpInternalServerErrorException($request, 'Registration failed. Please try again.');
+        }
+
+        return $response
+            ->withHeader('Location', '/profil')
+            ->withStatus(302);
+    }
 }

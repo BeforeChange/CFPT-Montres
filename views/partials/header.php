@@ -12,8 +12,14 @@
 
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <?php include __DIR__ . '/links.php'; ?>
+                    <?php include __DIR__ . '/links_base.php'; ?>
                 </ul>
+
+                <?php if ($is_staff): ?>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <?php include __DIR__ . '/links_staff.php'; ?>
+                    </ul>
+                <?php endif; ?>
             </div>
         </div>
     </nav>

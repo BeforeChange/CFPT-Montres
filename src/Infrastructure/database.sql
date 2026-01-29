@@ -7,6 +7,9 @@ CREATE TABLE roles (
     name varchar(50) NOT NULL
     );
 
+INSERT INTO roles (name) VAlUES ('member');
+INSERT INTO roles (name) VAlUES ('staff');
+
 CREATE TABLE users (
     id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
     last_name varchar(50) NOT NULL,
@@ -14,7 +17,7 @@ CREATE TABLE users (
     email varchar(50) NOT NULL UNIQUE,
     password_hash varchar(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_role INT UNSIGNED NOT NULL,
+    id_role INT UNSIGNED NOT NULL DEFAULT '1',
     FOREIGN KEY (id_role) REFERENCES roles(id)
     );
 
@@ -26,6 +29,7 @@ CREATE TABLE brands (
 CREATE TABLE versions (
     id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
     name varchar(50) NOT NULL,
+    price INT UNSIGNED NOT NULL,
     id_brand INT UNSIGNED NOT NULL,
     FOREIGN KEY (id_brand) REFERENCES brands(id)
     );

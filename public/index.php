@@ -1,6 +1,8 @@
 <?php
 
+use Cfpt\Montres\Controllers\ErrorController;
 use Slim\Exception\HttpNotFoundException;
+use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -20,14 +22,20 @@ AppFactory::setContainer($container);
 $app = AppFactory::create();
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
-$errorMiddleware->setErrorHandler(
-    HttpNotFoundException::class,
-    function ($request, $exception, $displayErrorDetails) {
+$errorMiddleware->setDefaultErrorHandler(
+    function (Request $request, Throwable $exception, bool $displayErrorDetails) use ($app) : Response {
+
         $response = new Response();
 
-        return $response
-            ->withHeader('Location', '/404')
-            ->withStatus(301);
+        $status = 500;
+        if ($exception instanceof HttpNotFoundException) {
+            $status = 404;
+        } elseif (method_exists($exception, 'getCode') && $exception->getCode() >= 400 && $exception->getCode() < 600) {
+            $status = $exception->getCode();
+        }
+
+        $controller = $app->getContainer()->get(ErrorController::class);
+        return $controller->show($request, $response, ['code' => $status]);
     }
 );
 

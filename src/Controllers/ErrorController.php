@@ -19,7 +19,7 @@ class ErrorController extends Controller {
             default => "Erreur inconnue",
         };
 
-        return $this->renderer->render($response, 'error.php', [
+        return $this->renderer->render($response, 'error/error.php', [
             'code' => $code,
             'message' => $message
         ]);

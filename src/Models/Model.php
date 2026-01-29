@@ -65,11 +65,25 @@ abstract class Model {
             throw new \Exception("No properties to update.");
         }
 
+        foreach ($props as $key => &$value) {
+            if (property_exists($this, $key)) {
+                if (isset($this->casts[$key])) {
+                    switch ($this->casts[$key]) {
+                        case 'datetime':
+                            $value = $value->format('Y-m-d H:i:s');
+                            break;
+                    }
+                }
+            }
+        }
+
         $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($props)));
     
         $sql = "UPDATE {$table} SET $set WHERE id = :id";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute(array_merge($props, ['id' => $this->id]));
+        $result = $stmt->execute(array_merge($props, ['id' => $this->id]));
+
+        return $result;
     }
 
     protected function insert() {
