@@ -38,7 +38,7 @@ class UserService extends Service {
 
     public function getCurrentUser() {
         $user = new User($this->db);
-        $user->findById($_SESSION['user_id']);
+        $user->find($_SESSION['user_id']);
 
         if($user == null)
             return false;

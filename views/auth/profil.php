@@ -64,7 +64,7 @@
                     <a href="/profil/edit" class="btn btn-outline-primary">
                         Modifier le profil
                     </a>
-                    <a href="/password/change" class="btn btn-outline-secondary">
+                    <a href="javascript:void(0)" class="btn btn-outline-secondary">
                         Changer le mot de passe
                     </a>
                     <a href="/logout" class="btn btn-outline-danger ms-auto">
