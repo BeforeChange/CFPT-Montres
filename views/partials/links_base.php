@@ -12,6 +12,12 @@
         </a>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link position-relative" href="cart.php">
+            <ion-icon name="cart-outline" style="font-size:22px;"></ion-icon>
+       </a>
+    </li>
+
 <?php else: ?>
 
     <li class="nav-item">
