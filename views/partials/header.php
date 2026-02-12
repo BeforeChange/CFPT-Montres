@@ -2,8 +2,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="/">
-                <img src="assets/img/logo.svg" alt="Logo" width="32" height="32">
-                <span><?= htmlspecialchars($title) ?></span>
+                <img src="assets/images/logo.png" alt="Logo" height="32">
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">

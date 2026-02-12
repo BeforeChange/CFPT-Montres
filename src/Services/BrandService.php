@@ -11,4 +11,11 @@ class BrandService extends Service {
 
         return $brands;
     }
+
+    public function find($id){
+        $brand = new Brand($this->db);
+        $brand = $brand->find($id);
+
+        return $brand;
+    }
 }

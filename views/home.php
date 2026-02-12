@@ -41,11 +41,13 @@
     <div class="row g-4 justify-content-center">
         <?php foreach ($brands as $brand): ?>
             <div class="col-6 col-md-4 col-lg-3 d-flex justify-content-center">
-                <div class="card h-100 text-center" style="max-width: 200px; width: 100%;">
-                    <div class="card-body">
-                        <h5 class="card-title"><?= htmlspecialchars($brand->name) ?></h5>
+                <a href="/watches?brand[]=<?= urlencode($brand->name) ?>" style="text-decoration: none; color: inherit; width: 100%;">
+                    <div class="card h-100 text-center" style="max-width: 200px; width: 100%;">
+                        <div class="card-body">
+                            <h5 class="card-title"><?= htmlspecialchars($brand->name) ?></h5>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         <?php endforeach; ?>
     </div>

@@ -11,4 +11,11 @@ class VersionService extends Service {
 
         return $versions;
     }
+
+    public function find($id) {
+        $version = new Version($this->db);
+        $version = $version->find($id);
+        
+        return $version;
+    }
 }

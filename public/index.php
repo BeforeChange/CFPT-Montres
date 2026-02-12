@@ -24,7 +24,7 @@ $app = AppFactory::create();
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 $app->add(AccessLoggerMiddleware::class);
 
-$errorMiddleware->setDefaultErrorHandler(
+/* $errorMiddleware->setDefaultErrorHandler(
     function (Request $request, Throwable $exception, bool $displayErrorDetails) use ($app) : Response {
 
         $response = new Response();
@@ -39,9 +39,10 @@ $errorMiddleware->setDefaultErrorHandler(
         $controller = $app->getContainer()->get(ErrorController::class);
         return $controller->show($request, $response, ['code' => $status]);
     }
-);
+); */
 
-(require __DIR__ . '/../routes/HomeRoutes.php')($app);  
+(require __DIR__ . '/../routes/HomeRoutes.php')($app);
+(require __DIR__ . '/../routes/WatchesRoutes.php')($app);  
 (require __DIR__ . '/../routes/AuthRoutes.php')($app);
 (require __DIR__ . '/../routes/AdminRoutes.php')($app);  
 
