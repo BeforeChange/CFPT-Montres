@@ -1,6 +1,7 @@
 <?php
 
 use Cfpt\Montres\Controllers\ErrorController;
+use Cfpt\Montres\Middlewares\AccessLoggerMiddleware;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
@@ -21,6 +22,7 @@ AppFactory::setContainer($container);
 
 $app = AppFactory::create();
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
+$app->add(AccessLoggerMiddleware::class);
 
 $errorMiddleware->setDefaultErrorHandler(
     function (Request $request, Throwable $exception, bool $displayErrorDetails) use ($app) : Response {
@@ -41,5 +43,6 @@ $errorMiddleware->setDefaultErrorHandler(
 
 (require __DIR__ . '/../routes/HomeRoutes.php')($app);  
 (require __DIR__ . '/../routes/AuthRoutes.php')($app);
+(require __DIR__ . '/../routes/AdminRoutes.php')($app);  
 
 $app->run();

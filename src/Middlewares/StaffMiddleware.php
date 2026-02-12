@@ -22,7 +22,6 @@ class StaffMiddleware implements MiddlewareInterface
     }
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
-
         $user = $this->userService->getCurrentUser();
         $result = $this->roleService->isStaff($user->id_role);
 

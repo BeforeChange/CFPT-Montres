@@ -2,6 +2,8 @@
 
 namespace Cfpt\Montres\Models;
 
-class Role extends Model {
+use Cfpt\Montres\Models\Model;
+
+class Brand extends Model {
     public ?string $name;
 }

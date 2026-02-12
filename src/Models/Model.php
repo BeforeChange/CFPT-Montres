@@ -15,11 +15,18 @@ abstract class Model {
         protected Database $db
     ) {}
 
+    private array $table_exception =[
+        'watch' => 'watches'
+    ];
+
     protected function table(): string {
-        return strtolower((new \ReflectionClass($this))->getShortName()) . 's';
+        $class_name = strtolower((new \ReflectionClass($this))->getShortName());
+        if(isset($this->table_exception[$class_name]))
+            $class_name = $this->table_exception[$class_name];
+        return $class_name . 's';
     }
 
-    protected function fill(array $data) {
+    public function fill(array $data) {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
                 if (isset($this->casts[$key])) {
@@ -38,7 +45,7 @@ abstract class Model {
     public function all(): array {
         $stmt = $this->db->query("SELECT * FROM " . $this->table());
         $data = $stmt->fetchAll();
-        $data = array_map(fn($d) => $this->fill($d), $data);
+        $data = array_map(fn($d) => (new static($this->db))->fill($d), $data);
 
         return $data;
     }
@@ -59,7 +66,7 @@ abstract class Model {
         $table = $this->table();
         $props = get_object_vars($this);
 
-        unset($props['id'], $props['db'], $props['casts']);
+        unset($props['id'], $props['db'], $props['casts'], $props['table_exception']);
 
         if (empty($props)) {
             throw new \Exception("No properties to update.");
@@ -90,10 +97,16 @@ abstract class Model {
         $table = $this->table();
         $props = get_object_vars($this);
 
-        unset($props['id'], $props['db'], $props['casts']);
+        unset($props['id'], $props['db'], $props['casts'], $props['table_exception']);
 
         if (empty($props)) {
             throw new \Exception("No properties to insert.");
+        }
+
+        foreach ($props as $key => $value) {
+            if (isset($this->casts[$key]) && $this->casts[$key] === 'datetime') {
+                $props[$key] = $value instanceof \DateTime ? $value->format('Y-m-d H:i:s') : $value;
+            }
         }
 
         $columns = implode(', ', array_keys($props));

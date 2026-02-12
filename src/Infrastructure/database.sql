@@ -38,6 +38,8 @@ CREATE TABLE watches (
     id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
     name varchar(50) NOT NULL,
     image LONGBLOB NOT NULL,
+    short_description VARCHAR(255),
+    long_description TEXT,
     id_version INT UNSIGNED NOT NULL,
     FOREIGN KEY (id_version) REFERENCES versions(id)
     );
